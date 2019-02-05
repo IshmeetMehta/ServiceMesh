@@ -27,10 +27,10 @@ ISTIO_VERSION=1.0.5
 NAME="istio-$ISTIO_VERSION"
 
 echo Apply the version of the ratings microservice, v2-mysql, that will use database.  
-kubectl apply -f ~/scripts/bookinfo/bookinfo-ratings-v2-mysql.yaml
+kubectl apply -f ~/ServiceMesh/scripts/bookinfo/bookinfo-ratings-v2-mysql.yaml
 
 echo Apply default Destination rules
-kubectl apply -f ~/$NAME/samples/bookinfo/networking/destination-rule-all.yaml
+kubectl apply -f /$NAME/samples/bookinfo/networking/destination-rule-all.yaml
 
 echo Create virtual services to route traffic to rewviews to v3 and ratings to v2-mysql
 kubectl apply -f ~/$NAME/samples/bookinfo/networking/virtual-service-ratings-mysql.yaml

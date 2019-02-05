@@ -13,7 +13,7 @@
 # ****************************************************************************
 
 echo Deploying Bookinfo application...
-kubectl apply -f ~/scripts/bookinfo/bookinfo.yaml
+kubectl apply -f ~/ServiceMesh/scripts/bookinfo/bookinfo.yaml
 
 echo Waiting for a min to complete the installation bookinfo app and services...
 sleep 60

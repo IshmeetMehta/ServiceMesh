@@ -58,7 +58,7 @@ else
 fi
 
 echo Installing Istio components...
-kubectl apply -f ~/$NAME/install/kubernetes/istio-demo.yaml
+kubectl apply -f $NAME/install/kubernetes/istio-demo.yaml
 
 echo See if pods are running under istio-system namespace
 kubectl get pods -n istio-system
@@ -86,7 +86,7 @@ then
 fi
 	
 echo Deploying Bookinfo application...
-kubectl apply -f ~/$NAME/samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl apply -f $NAME/samples/bookinfo/platform/kube/bookinfo.yaml
 # kubectl apply -f <(istioctl kube-inject -f $NAME/samples/bookinfo/platform/kube/bookinfo.yaml)
 
 echo Waiting for a min to complete the installation bookinfo app and services...
@@ -97,7 +97,7 @@ kubectl get services
 kubectl get pods
 
 echo Define the ingress gateway routing for the application
-kubectl apply -f ~/$NAME/samples/bookinfo/networking/bookinfo-gateway.yaml
+kubectl apply -f $NAME/samples/bookinfo/networking/bookinfo-gateway.yaml
 
 sleep 60
 

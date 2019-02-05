@@ -38,25 +38,10 @@ if [ "$SAMPLE_APP_DEPLOY" != "Y" ]; then
 	exit 0
 fi
 
-# Initialize environment variables
-ISTIO_VERSION=1.0.5
-NAME="istio-$ISTIO_VERSION"
-
-echo Check if Istio Samples exists in the system
-ISTIOCTL_VERSION=$(istioctl version | grep Version)
-
-if [ "$ISTIOCTL_VERSION" == "" ]; then
-	echo Downloading Istio samples...
-	curl -L https://git.io/getLatestIstio | sh -
-	export PATH=$PWD/$NAME/bin:$PATH
-else
-	echo "Istio samples already downloaded"
-fi
-
 echo Deploying Bookinfo application...
-kubectl apply -f ~/$NAME/samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl apply -f ~/ServiceMesh/scripts/bookinfo/bookinfo.yaml
 
-echo Waiting for a min to complete the installation bookinfo app and services...
+echo Waiting for a min to complete the installation of bookinfo app and services...
 sleep 60
 
 echo Verify that application has been deployed correctly
