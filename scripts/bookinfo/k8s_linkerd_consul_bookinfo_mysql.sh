@@ -9,7 +9,7 @@
 #
 # Prerequisite(s):
 #	- A cluster and bookinfo application is already setup
-#	- Update the DB configuration in samples/bookinfo/platform/kube/bookinfo-ratings-v2-mysql.yaml
+#	- Update the DB configuration in scripts/bookinfo/bookinfo-ratings-v2-mysql.yaml
 #
 # Note:
 #	- The DB parameters are intentionally left out of the script to avoid exposing secrets.
@@ -23,5 +23,12 @@ if [ "$MY_SQL_DB_CONFIG" != "Y" ]; then
 	exit 0
 fi
 
+echo Deleting bookinfo application and recreating with only required services...
+kubectl delete -f ~/scripts/bookinfo/bookinfo.yaml
+
+sleep 30
+
+kubectl apply -f ~/scripts/bookinfo/bookinfo_mini.yaml
+
 echo Apply the version of the ratings microservice, v2-mysql, that will use database.  
-kubectl apply -f istio-1.0.5/samples/bookinfo/platform/kube/bookinfo-ratings-v2-mysql.yaml
+kubectl apply -f ~/scripts/bookinfo/bookinfo-ratings-v2-mysql.yaml

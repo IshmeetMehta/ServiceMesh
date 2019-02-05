@@ -54,7 +54,7 @@ else
 fi
 
 echo Deploying Bookinfo application...
-kubectl apply -f $NAME/samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl apply -f ~/$NAME/samples/bookinfo/platform/kube/bookinfo.yaml
 
 echo Waiting for a min to complete the installation bookinfo app and services...
 sleep 60
