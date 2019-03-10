@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: perf-report-web
+  namespace: bookinfo-perf
+  labels:
+    app: perf-report-web
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: perf-report-nfs
+  volumes:
+    - name: perf-report-nfs
+      persistentVolumeClaim:
+        claimName: perfreport-volumeclaim
+        readOnly: false

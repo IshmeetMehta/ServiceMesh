@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Job
+metadata:
+  name: report-aggregation
+  namespace: bookinfo-perf
+spec:
+  volumes:
+    - name: perf-report-storage
+      persistentVolumeClaim:
+        claimName: perfreport-volumeclaim
+  containers:
+    - name: nginx
+      image: nginx
+      command: ["/gatling/bin/aggregateReports.sh"]
+      volumeMounts:
+        - name: perf-report-storage
+          mountPath: /gatling/target

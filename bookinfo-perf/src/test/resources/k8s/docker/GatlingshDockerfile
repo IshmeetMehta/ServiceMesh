@@ -1,0 +1,8 @@
+FROM openjdk:8-jdk-alpine
+COPY src/test/scala/net /gatling/simulations/net/
+COPY src/test/resources/k8s/scripts/perfTest.sh /gatling/bin/perfTest.sh
+COPY gatling-charts-highcharts-bundle-3.0.3 /gatling/gatling-charts-highcharts-bundle-3.0.2/
+WORKDIR /gatling
+RUN mkdir /gatling/reports
+RUN apk add --no-cache bash
+RUN chmod +x ./bin/perfTest.sh

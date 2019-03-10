@@ -1,16 +1,15 @@
 package net.gomesh.test.bookinfogatlingtest
 
-import scala.concurrent.duration._
-
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import io.gatling.jdbc.Predef._
 
 class BasicSimulation extends Simulation {
-  val numberOfUsers = Integer.getInteger("users", 1)
-	val rampUpTime = java.lang.Long.getLong("ramp", 0L)
-	val repetitions = Integer.getInteger("repetitions", 1).intValue()
-	val baseUrl = System.getProperty("baseURL", "http://35.225.103.114:9080")
+  val numberOfUsers = Integer.getInteger("users", 10)
+	val rampUpTime = java.lang.Long.getLong("ramp", 10L)
+	val repetitions = Integer.getInteger("repetitions", 10).intValue()
+	val baseUrl = System.getProperty("baseURL", "http://35.188.22.194:9080")
+	println(s"users: $numberOfUsers ramp: $rampUpTime reps; $repetitions baseUrl: $baseUrl")
+	// -Dusers=10 -Dramp=10 -Drepetitions=10 -DbaseURL=http://35.188.22.194:9080/
 	val httpProtocol = http
 		.baseUrl(baseUrl)
 		.inferHtmlResources(BlackList(""".*.css""", """.*.js""", """.*.ico"""), WhiteList())
@@ -30,6 +29,10 @@ class BasicSimulation extends Simulation {
 			exec(http("request_0")
 				.get("/productpage")
 				.headers(headers_0))
+  			.exec(session => {
+					println(s"users: $numberOfUsers ramp: $rampUpTime reps; $repetitions baseUrl: $baseUrl")
+					session
+				})
 		}
 
 	setUp(scn.inject(rampUsers(numberOfUsers) during(rampUpTime seconds))).protocols(httpProtocol)

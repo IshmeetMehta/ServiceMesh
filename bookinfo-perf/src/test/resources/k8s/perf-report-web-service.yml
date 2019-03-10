@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: perf-report-web-service
+  namespace: bookinfo-perf
+spec:
+  selector:
+    app: perf-report-web
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

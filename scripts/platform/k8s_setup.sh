@@ -1,4 +1,4 @@
-
+#!/usr/bin/env bash
 # ****************************************************************************
 # Purpose of the script: 
 # 	- Create new cluster in Kubernetes

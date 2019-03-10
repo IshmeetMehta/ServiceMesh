@@ -1,0 +1,55 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bookinfo-perf-reports
+  namespace: bookinfo-perf
+spec:
+  backoffLimit: 1
+  parallelism: 1
+  completions: 1
+  template:
+    metadata:
+      labels:
+        name: bookinfo-perf
+    spec:
+      containers:
+        - image: gcr.io/e2-chase/perf-report-build:v1
+          name: bookinfo-perf
+          args:
+            - /gatling/bin/aggregateReports.sh
+          resources:
+            limits:
+              cpu: 500m
+              memory: 500Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
+          envFrom:
+            - configMapRef:
+                name: bookinfo-perf-config
+          env:
+            - name: MY_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          volumeMounts:
+            - name: perf-report-storage
+              mountPath: /gatling/reports
+      restartPolicy: Never
+      volumes:
+        - name: perf-report-storage
+          persistentVolumeClaim:
+            claimName: perfreport-volumeclaim
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bookinfo-reports-config
+  namespace: bookinfo-perf
+data:
+  JAVA_OPTS: -Dusers=10 -Dramp=10 -Drepetitions=10 -DbaseURL=http://35.225.103.114:9080

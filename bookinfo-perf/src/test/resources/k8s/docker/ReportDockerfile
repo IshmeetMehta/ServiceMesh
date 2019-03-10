@@ -1,0 +1,8 @@
+FROM openjdk:8-jdk-alpine
+COPY src/test/scala/net /gatling/simulations/net/
+COPY src/test/resources/k8s/scripts/aggregateReports.sh /gatling/bin/aggregateReports.sh
+COPY gatling-charts-highcharts-bundle-3.0.3 /gatling/gatling-charts-highcharts-bundle-3.0.2/
+COPY src/test/resources/k8s/reports /gatling/reports
+WORKDIR /gatling
+RUN apk add --no-cache bash
+RUN chmod +x ./bin/aggregateReports.sh
