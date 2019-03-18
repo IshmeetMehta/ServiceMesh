@@ -7,7 +7,9 @@ class BasicSimulation extends Simulation {
   val numberOfUsers = Integer.getInteger("users", 10)
 	val rampUpTime = java.lang.Long.getLong("ramp", 10L)
 	val repetitions = Integer.getInteger("repetitions", 10).intValue()
-	val baseUrl = System.getProperty("baseURL", "http://35.188.22.194:9080")
+	val baseUrl = System.getProperty("baseURL", "http://35.193.132.139:9080/productpage")
+	val requestName = System.getProperty("requestName", "BookInfo")
+
 	println(s"users: $numberOfUsers ramp: $rampUpTime reps; $repetitions baseUrl: $baseUrl")
 	// -Dusers=10 -Dramp=10 -Drepetitions=10 -DbaseURL=http://35.188.22.194:9080/
 	val httpProtocol = http
@@ -26,8 +28,8 @@ class BasicSimulation extends Simulation {
 
 	val scn = scenario("BasicSimulation")
   	.repeat(repetitions, "n") {
-			exec(http("request_0")
-				.get("/productpage")
+			exec(http(requestName)
+				.get("?u=normal")
 				.headers(headers_0))
   			.exec(session => {
 					println(s"users: $numberOfUsers ramp: $rampUpTime reps; $repetitions baseUrl: $baseUrl")
