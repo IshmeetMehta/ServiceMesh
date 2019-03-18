@@ -7,7 +7,7 @@
 #	- Setup Ingress Gateway for external access(outside the GKE cluster)
 #	- Verify user's bookinfo access using GATEWAY_URL
 # ****************************************************************************
-
+#!/bin/bash
 function setupKubectl(){
 
 	KUBECTL_VERSION=$(kubectl version --short | grep Client)
@@ -38,10 +38,12 @@ function setupGKECluster(){
 
 	gcloud container clusters create $CLUSTERNAME \
 	 --cluster-version=latest \
-	 --zone us-central1-f \
+	 --zone us-central1-c \
 	 --num-nodes 4
          
 	GKE_STATUS=$(gcloud container clusters list | grep $CLUSTERNAME)
+
+	sleep 10
 
 	if [ "$GKE_STATUS" != "" ]; then
 		echo "Setting up GKE cluster rolebinding as admin"
@@ -99,22 +101,35 @@ function setUpIstio(){
 
 	echo " Let’s deploy the BookInfo sample app now:"
 	kubectl apply -f $WORKDIR/istio-1.0.6/samples/bookinfo/platform/kube/bookinfo.yaml
-	sleep 5
-	echo " Let’s deploy the BookInfo gateway now:"
-	kubectl apply -f $WORKDIR/istio-1.0.6/samples/bookinfo/networking/bookinfo-gateway.yaml
 }
 
+function InstallBookInfo(){
+
+	echo " Let’s deploy the BookInfo gateway now:"
+	kubectl apply -f $WORKDIR/istio-1.0.6/samples/bookinfo/networking/bookinfo-gateway.yaml
+
+	export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
+	export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+	export GATEWAY_URL=$INGRESS_HOST:$INGRESS_PORT
+	echo Installation of bookInfo app is complete 
+	echo Please open link $GATEWAY_URL/productpage in your browser
 
 
-echo Check and Install Kubectl to connect to GKE cluster
+
+}
+
+echo Checking if Kubectl is installed on your system 
+echo Kubectl is required to connect to GKE cluster
 setupKubectl
 sleep 5 
 
-echo Install Google Kubernetes Cluster of 4 nodes 
+echo Installing Google Kubernetes Cluster of 4 nodes 
 read -p "Enter the location of the Istio set up = " WORKDIR
 
 setupGKECluster
-sleep 5 
+sleep 10 
 InstallIstio
 sleep 5 
 setUpIstio
+sleep 5
+InstallBookInfo
