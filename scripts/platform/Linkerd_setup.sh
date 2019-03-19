@@ -54,8 +54,8 @@ else
 	echo "LINKERED Client is installed"
 fi
 
-echo Installing Linkerd onto the cluster...
-linkerd install | kubectl apply -f -
+echo Installing Linkerd onto the cluster with automatic proxy injection enabled...
+linkerd install --proxy-auto-inject | kubectl apply -f -
 
 echo Checking linkerd status...
 linkerd check

@@ -7,6 +7,7 @@
 #	- Install Bookinfo application
 #	- Setup Ingress Gateway for external access
 #	- Verify bookinfo access using GATEWAY_URL
+#	- Expose Prometheus and Grafana services using LoadBalancer IP
 # ****************************************************************************
 
 echo Check and install Kubectl if it does not exist
@@ -58,7 +59,7 @@ else
 fi
 
 echo Installing Istio components...
-kubectl apply -f $NAME/install/kubernetes/istio-demo.yaml
+kubectl apply -f $PWD/$NAME/install/kubernetes/istio-demo.yaml
 
 echo See if pods are running under istio-system namespace
 kubectl get pods -n istio-system
@@ -86,8 +87,7 @@ then
 fi
 	
 echo Deploying Bookinfo application...
-kubectl apply -f $NAME/samples/bookinfo/platform/kube/bookinfo.yaml
-# kubectl apply -f <(istioctl kube-inject -f $NAME/samples/bookinfo/platform/kube/bookinfo.yaml)
+kubectl apply -f $PWD/$NAME/samples/bookinfo/platform/kube/bookinfo.yaml
 
 echo Waiting for a min to complete the installation bookinfo app and services...
 sleep 60
@@ -96,8 +96,8 @@ echo Verify that application has been deployed correctly
 kubectl get services
 kubectl get pods
 
-echo Define the ingress gateway routing for the application
-kubectl apply -f $NAME/samples/bookinfo/networking/bookinfo-gateway.yaml
+echo Define the ingress gateway routing for the application...
+kubectl apply -f $PWD/$NAME/samples/bookinfo/networking/bookinfo-gateway.yaml
 
 sleep 60
 
@@ -113,5 +113,13 @@ curl -o /dev/null -s -w "%{http_code}\\n" http://${GATEWAY_URL}/api/v1/products
 # kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') 8085:3000
 # echo Goto http://localhost:8085 to see the dashboard
 
+echo Exposing Prometheus as Load Balancer IP...
+kubectl patch svc prometheus -p '{"spec":{"type":"LoadBalancer"}}' -n istio-system
+
+echo Exposing Grafana as Load Balancer IP...
+kubectl patch svc grafana -p '{"spec":{"type":"LoadBalancer"}}' -n istio-system
+
+echo Exposing Servicegraph as Load Balancer IP...
+kubectl patch svc servicegraph -p '{"spec":{"type":"LoadBalancer"}}' -n istio-system
 
 # end of script
