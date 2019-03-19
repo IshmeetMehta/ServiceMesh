@@ -2,3 +2,5 @@
 .idea/
 gatling-charts-highcharts-bundle-3.0.2/
 gatling-charts-highcharts-bundle-3.0.3/
+target/
+reports/
