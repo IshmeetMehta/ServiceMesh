@@ -9,6 +9,8 @@ Script requires you to provide a work directory with the GKE cluster name of cho
 
 Presently GKE clusters are being installed in us-central1-c 
 
+./LabSetUp.sh
+
 #Please check if istio namespace injection is enabled and working
 
 #kubectl get pods -n istio-system
@@ -29,7 +31,7 @@ istio-tracing-6445d6dbbf-lf6rd           1/1     Running     0          2m15s
 prometheus-65d6f6b6c-6p6pg               1/1     Running     0          2m17s
 servicegraph-658fd9f76d-mvt7h            1/1     Running     0          2m16s
 
-
+# Note : istio sidecars have ben injected in default namespace
 #$ kubectl get namespace -L istio-injection
 NAME           STATUS   AGE     ISTIO-INJECTION
 default        Active   5m2s    enabled
@@ -38,6 +40,19 @@ kube-public    Active   5m2s
 kube-system    Active   5m2s    
 
 
-#Please link in browser to view the app
 
-Please open link $GATEWAY_URL/productpage in your browser 
+#Please open link $GATEWAY_URL/productpage in your browser to view app
+
+#Post application Install, we need to set up External Ips for Istio Services
+
+Run following script
+
+./Assign_External_Ips_Istio_Services.sh
+
+#Please follow instructions at the end to view the external ips assigned to the services
+
+
+#To Generate load for Telemetry views, you can run following script.
+For loop count can be increase to generate more page hits.
+
+./generate_load.sh

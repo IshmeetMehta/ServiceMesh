@@ -99,11 +99,12 @@ function setUpIstio(){
 	echo " verify that label was successfully applied"
 	kubectl get namespace -L istio-injection
 
-	echo " Let’s deploy the BookInfo sample app now:"
-	kubectl apply -f $WORKDIR/istio-1.0.6/samples/bookinfo/platform/kube/bookinfo.yaml
 }
 
 function InstallBookInfo(){
+
+	echo " Let’s deploy the BookInfo sample app now:"
+	kubectl apply -f $WORKDIR/istio-1.0.6/samples/bookinfo/platform/kube/bookinfo.yaml
 
 	echo " Let’s deploy the BookInfo gateway now:"
 	kubectl apply -f $WORKDIR/istio-1.0.6/samples/bookinfo/networking/bookinfo-gateway.yaml
@@ -124,7 +125,7 @@ setupKubectl
 sleep 5 
 
 echo Installing Google Kubernetes Cluster of 4 nodes 
-read -p "Enter the location of the Istio set up = " WORKDIR
+read -p "Enter the location where you want download Istio = " WORKDIR
 
 setupGKECluster
 sleep 10 
