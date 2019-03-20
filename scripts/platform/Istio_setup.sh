@@ -43,7 +43,7 @@ kubectl create clusterrolebinding cluster-admin-binding \
   --user=$(gcloud config get-value core/account)
 
 # Initialize environment variables
-ISTIO_VERSION=1.0.5
+ISTIO_VERSION=1.1.0
 NAME="istio-$ISTIO_VERSION"
 
 echo Check if Istio already downloaded
