@@ -70,8 +70,8 @@ kubectl label namespace default istio-injection=enabled
 echo Verify that label was successfully applied
 kubectl get namespace -L istio-injection
 
-echo Waiting for couple of mins to complete the installation of Istio components...
-sleep 120
+echo Waiting for a min to complete the installation of Istio components...
+sleep 60
 
 echo ***************************************************************
 echo Cluster has been created and Istio installed.
@@ -89,7 +89,7 @@ fi
 echo Deploying Bookinfo application...
 kubectl apply -f $PWD/$NAME/samples/bookinfo/platform/kube/bookinfo.yaml
 
-echo Waiting for a min to complete the installation bookinfo app and services...
+echo Waiting for a min to complete the installation of bookinfo app and services...
 sleep 60
 
 echo Verify that application has been deployed correctly
@@ -109,9 +109,13 @@ echo $GATEWAY_URL
 echo curl -o /dev/null -s -w \"%{http_code}\\n\" http://${GATEWAY_URL}/api/v1/products
 curl -o /dev/null -s -w "%{http_code}\\n" http://${GATEWAY_URL}/api/v1/products
 
-# echo Setting-up port-forwarding to see Grafana dashboard
-# kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') 8085:3000
-# echo Goto http://localhost:8085 to see the dashboard
+echo Do you want to expose services using LoadBalancer IP [Y/n]?
+read EXPOSE_SERVICE_IND
+
+if [ "$EXPOSE_SERVICE_IND" != "Y" ]
+then
+	exit 0
+fi
 
 echo Exposing Prometheus as Load Balancer IP...
 kubectl patch svc prometheus -p '{"spec":{"type":"LoadBalancer"}}' -n istio-system
@@ -119,7 +123,10 @@ kubectl patch svc prometheus -p '{"spec":{"type":"LoadBalancer"}}' -n istio-syst
 echo Exposing Grafana as Load Balancer IP...
 kubectl patch svc grafana -p '{"spec":{"type":"LoadBalancer"}}' -n istio-system
 
-echo Exposing Servicegraph as Load Balancer IP...
-kubectl patch svc servicegraph -p '{"spec":{"type":"LoadBalancer"}}' -n istio-system
+echo Exposing Kiali with Load Balancer IP...
+kubectl patch svc kiali -p '{"spec":{"type":"LoadBalancer"}}' -n istio-system
+
+echo Exposing Jaeger with Load Balancer IP...
+kubectl patch svc jaeger-query -p '{"spec":{"type":"LoadBalancer"}}' -n istio-system
 
 # end of script
