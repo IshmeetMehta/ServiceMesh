@@ -126,7 +126,7 @@ kubectl patch svc grafana -p '{"spec":{"type":"LoadBalancer"}}' -n istio-system
 echo Exposing Kiali with Load Balancer IP...
 kubectl patch svc kiali -p '{"spec":{"type":"LoadBalancer"}}' -n istio-system
 
-echo Exposing Jaeger with Load Balancer IP...
-kubectl patch svc jaeger-query -p '{"spec":{"type":"LoadBalancer"}}' -n istio-system
+echo Exposing Jaeger Tracing with Load Balancer IP...
+kubectl patch svc tracing -p '{"spec":{"type":"LoadBalancer"}}' -n istio-system
 
 # end of script
